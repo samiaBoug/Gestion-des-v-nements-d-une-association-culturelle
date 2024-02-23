@@ -105,6 +105,8 @@ include("include/conn.php");
     foreach ($evenements as $evenement) {
 
       $idEvenement = $evenement['idEvenement'];
+      $dateEvenement = $evenement['dateEvenement'];
+      if($currentDate< $dateEvenement){
         $sqlVersionDate = $conn-> query("select dateEvenement from version where idEvenement = '$idEvenement' ");
          $versionsDate = $sqlVersionDate ->fetchAll(PDO::FETCH_ASSOC);
         echo '<div class="card" style="width: 18rem;">';
@@ -114,17 +116,11 @@ include("include/conn.php");
         echo '<h4 class="card-title">'.$evenement['titre'] .'</h4>';
         // date de l'evenement 
         echo '<p class="card-text"> Rendez-vous le : ' . $evenement['dateEvenement'] . '</p>';
-      
-
-          echo '<a href="#" class="btn btn-primary">J\'achète </a>
-                 </div>
-                </div> ';
-
-     
-    
-      
-    }
-    
+        echo '<a href="details.php?id=' . $evenement['idEvenement'] . '" class="btn btn-primary">J\'achète</a>';
+        echo ' </div>';
+        echo ' </div> ';
+     }
+    }   
     ?>
     </div>
     </div>
