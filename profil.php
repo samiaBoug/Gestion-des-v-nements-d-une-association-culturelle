@@ -1,6 +1,9 @@
 <?php
 include('include/conn.php');
- 
+if(!isset($_SESSION)){
+  session_start();
+}
+
 ?>
 
 <?php include('include/header.php') ?>

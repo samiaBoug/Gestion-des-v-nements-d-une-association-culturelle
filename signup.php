@@ -47,8 +47,7 @@ if(isset($_POST['signup'])){
 
         $sqlAjouterUtilisateur = $conn->query("insert into utilisateur (nom,prenom, email, motPasse) Values ('$newNom','$newPrenom','$newEmail','$newMotDePasse')");
         $ajouterUtilisateur = $sqlAjouterUtilisateur->fetchAll(PDO::FETCH_ASSOC);
-        header('location:login.php');
-        
+        header('location:login.php');  
     }
   
     
@@ -66,25 +65,25 @@ if(isset($_POST['signup'])){
       <div class="mb-3">
     <label for="" class="form-label">Nom</label>
     <input type="text" class="form-control" id="" name="nom">
-    <div  class="form-text msgError"><?php echo $errors['nom']; ?></div>
+    <div  class="form-text erreurs"><?php echo $errors['nom']; ?></div>
   </div>
 
    <div class="mb-3">
     <label for="" class="form-label">Prenom</label>
     <input type="text" class="form-control" id="" name="prenom">
-    <div  class="form-text msgError"><?php echo $errors['prenom']; ?></div>
+    <div  class="form-text erreurs"><?php echo $errors['prenom']; ?></div>
   </div>
          
   <div class="mb-3">
     <label for="" class="">Email</label>
     <input type="email" class="form-control" id="" name="email">
-    <div  class="form-text"> <?php echo $errors['email']; ?></div>
+    <div  class="form-text erreurs"> <?php echo $errors['email']; ?></div>
   </div>
 
   <div class="mb-3">
     <label for="" class="form-label">Mot de passe</label>
     <input type="password" class="form-control" id="" name="motDePasse">
-    <div  class="form-text"> <?php echo $errors['motDePasse']; ?></div>
+    <div  class="form-text erreurs"> <?php echo $errors['motDePasse']; ?></div>
 
   </div>
 

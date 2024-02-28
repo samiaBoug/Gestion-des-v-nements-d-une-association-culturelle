@@ -73,25 +73,25 @@ include('include/header.php')
       <div class="mb-3">
     <label for="" class="form-label">Nom</label>
     <input type="text" class="form-control" id="" name="nom" value="<?php echo $utilisateur['nom'] ?>">
-    <div  class="form-text msgError"><?php echo $errors['nom']; ?></div>
+    <div  class="form-text erreurs"><?php echo $errors['nom']; ?></div>
   </div>
 
    <div class="mb-3">
     <label for="" class="form-label">Prenom</label>
     <input type="text" class="form-control" id="" name="prenom" value="<?php echo $utilisateur['prenom'] ?>">
-    <div  class="form-text msgError"><?php echo $errors['prenom']; ?></div>
+    <div  class="form-text erreurs"><?php echo $errors['prenom']; ?></div>
   </div>
          
   <div class="mb-3">
     <label for="" class="">Email</label>
     <input type="email" class="form-control" id="" name="email" value="<?php echo $utilisateur['email'] ?>">
-    <div  class="form-text"> <?php echo $errors['email']; ?></div>
+    <div  class="form-text erreurs"> <?php echo $errors['email']; ?></div>
   </div>
 
   <div class="mb-3">
     <label for="" class="form-label">Mot de passe</label>
     <input type="password" class="form-control" id="" name="motDePasse">
-    <div  class="form-text"> <?php echo $errors['motDePasse']; ?></div>
+    <div  class="form-text erreurs"> <?php echo $errors['motDePasse']; ?></div>
 
   </div>
 

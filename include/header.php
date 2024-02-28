@@ -1,4 +1,25 @@
 
+<?php
+if (!isset($_SESSION)) {
+  session_start();
+}
+$connexion = "";
+if(isset($_SESSION['idUtilisateur'])){
+  $idUtilisateur=$_SESSION['idUtilisateur'] ;
+  $headerProfil = "profil.php?id=$idUtilisateur";
+  $headerHistory = "history.php?id=$idUtilisateur";
+  $connexion = "Log-out";
+}else{
+  $connexion = "Connexion";
+  $headerProfil =$headerHistory= "login.php";
+}
+if(isset($_POST['Connexion'])){
+  header('location:login.php');
+}elseif(isset($_POST['Log-out'])){
+  session_destroy();
+  header('location:login.php');
+}
+?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -22,14 +43,25 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" href="login.php">Connexion</a>
+          <form action="" method="POST">
+          <button type="submit" class="btn btn-primary" name="<?php echo $connexion ?>"><?php echo $connexion ?></button>
+           </form>
         </li>
-         <li class="nav-item">
-          <a class="nav-link" href="signup.php">Inscription</a>
-        </li>
+
       </ul>
   
     </div>
   </div>
 
     </header>
+     <div >
+    <ul class="nav flex-column" id="verticNav">
+  <li class="nav-item">
+    <a class="nav-link" href="<?php echo $headerProfil ?>">Profil</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="<?php echo $headerHistory ?>">Vos Achats</a>
+  </li>
+ 
+</ul>
+  </div>
