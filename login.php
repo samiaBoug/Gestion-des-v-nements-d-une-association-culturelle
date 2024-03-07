@@ -8,30 +8,29 @@ $errors = [
     'email' => '',
     'motDePasse' => ''
 ];
-
+if(isset($_SESSION['idUtilisateur'])){
+    header('location:profil.php');
+}else{
 
 if(isset($_POST['login'])){
-    // verifier email
+    // verifier email 
     if(empty($_POST['email'])){
         $errors['email'] = "email est obligatoire";
     }else {
         $checkEmail = $_POST['email'];
          $sqlEmails = $conn->query("select count(email) from utilisateur where email = '$checkEmail' ");
-         $Emails = $sqlEmails->fetchAll(PDO::FETCH_ASSOC);
+         $EmailCount = $sqlEmails->fetch(PDO::FETCH_ASSOC);
         
-        if($Emails[0]['count(email)']=== 0){
+        if($EmailCount['count(email)']=== 0){
             $errors['email'] = "email n'exist pas ";
         } 
         else{
             $email = $_POST['email'];
         }
-    }
-    // verifier mot de passe
-     if (empty($_POST['motDePasse'])) {
-    $errors['motDePasse'] = "Mot de passe est obligatoire";
-    } else {
-        if(!empty($email)){
-
+       // verifier mot de passe
+       if (empty($_POST['motDePasse'])) {
+        $errors['motDePasse'] = "Mot de passe est obligatoire";
+        } else {
         $sqlMotDePasse = $conn->query("select motPasse from utilisateur where email = '$email'");
         $MotDePassehaché = $sqlMotDePasse->fetch(PDO::FETCH_DEFAULT);
         $MotDePasse= $MotDePassehaché['motPasse'];
@@ -44,17 +43,18 @@ if(isset($_POST['login'])){
             $sqlId = $conn->query("select idUtilisateur from utilisateur where email = '$email'");
             $id = $sqlId->fetch(PDO::FETCH_ASSOC);
             $idUtilisateur = $id['idUtilisateur'];
-
-           session_start();
-                $_SESSION['idUtilisateur'] = $idUtilisateur;
+            if(stripos($email, 'admin') !== false){
+               $_SESSION['idUtilisateur'] = $idUtilisateur;
+                header("location:admin.php?id=$idUtilisateur"); 
+            }else{
+            $_SESSION['idUtilisateur'] = $idUtilisateur;
             header("location:profil.php?id=$idUtilisateur");
-                
+             }   
         }
-        }
+        
     }
-    
-
-
+    }
+}
 }
 ?>
 <?php 
@@ -66,13 +66,13 @@ include('include/header.php')
       <div class="mb-3">
         <label for="" class="">Email</label>
         <input type="email" class="form-control" id="" name="email">
-        <div  class="form-text erreurs"> <?php echo $errors['email']; ?></div>
+        <div  class="form-text erreurs" style="color: red;"> <?php echo $errors['email']; ?></div>
      </div>
 
   <div class="mb-3">
     <label for="" class="form-label">Mot de passe</label>
     <input type="password" class="form-control" id="" name="motDePasse">
-    <div  class="form-text erreurs"> <?php echo $errors['motDePasse']; ?></div>
+    <div  class="form-text erreurs" style="color: red;"> <?php echo $errors['motDePasse']; ?></div>
 
   </div>
 

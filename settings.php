@@ -1,20 +1,26 @@
 <?php 
 include('include/conn.php');
+if(!isset($_SESSION)){
+  session_start();
+}
+
 $errors=[
     'nom' => '',
     'prenom' => '',
-     'email' => '',
-    'motDePasse' => ''
+    'oldMotDePasse' => '',
+    'newMotDePasse' => ''
 ];
 
-if(isset($_GET['id'])){
-    $idUtilisateur = $_GET['id'];
-
-    $sqlUtilisateur = $conn->query("select * from utilisateur where idUtilisateur = '$idUtilisateur'");
+if(isset($_SESSION['idUtilisateur'])){
+    $idUtilisateur = $_SESSION['idUtilisateur'];
+    $sqlUtilisateur = $conn->prepare("select * from utilisateur where idUtilisateur = :idUtilisateur");
+    $sqlUtilisateur->bindParam(':idUtilisateur', $idUtilisateur);
+    $sqlUtilisateur->execute();
     $utilisateur = $sqlUtilisateur->fetch(PDO::FETCH_ASSOC);
+    print_r('hi');
 }
 if(isset($_POST['modifier'])){
-    $idUtilisateur = $_GET['id'];
+    $idUtilisateur = $_SESSION['idUtilisateur'];
     //gerer les erreurs
      //input Nom
     if(empty($_POST['nom'])){
@@ -28,36 +34,38 @@ if(isset($_POST['modifier'])){
     } else {
         $newPrenom = $_POST['prenom'];
     }
-       //input email
-    if(empty($_POST['email'])){
-        $errors['email'] = "email est obligatoire !";
-    }else {
-        $checkEmail = $_POST['email'];
-         $sqlEmails = $conn->query("select count(email) from utilisateur where email = '$checkEmail' ");
-         $Emails = $sqlEmails->fetchAll(PDO::FETCH_ASSOC);
-        if($Emails[0]['count(email)']>0){
-            $errors['email'] = "email déja exist ";
-        }else{
-            $newEmail = $_POST['email'];
+    // old mot de passe
+    if(empty(($_POST['oldMotDePasse']))){
+        $errors['oldMotDePasse'] = "mot da passe est obligatoire";
+    }else{
+        // comparer le mot de passe exister avec le input 
+        if(!password_verify($_POST['oldMotDePasse'], $utilisateur['motPasse'])){
+        $errors['oldMotDePasse'] = "ancien mot da passe est incorrect !";
         }
-        
     }
-    if(empty($_POST['motDePasse'])){
-        $errors['motDePasse'] = "le mot de passe est obligatoire !";
+    // new mot de passe
+    if(empty($_POST['newMotDePasse'])){
+        $errors['newMotDePasse'] = "le mot de passe est obligatoire !";
     } else {
-        $MotDePasse = $_POST['motDePasse'];
+        $MotDePasse = $_POST['newMotDePasse'];
         $newMotDePasse = password_hash($MotDePasse, PASSWORD_DEFAULT);
     }
     if (!array_filter($errors)) {
-        $sqlEdit = $conn->query("update utilisateur set nom = '$newNom', prenom = '$newPrenom',email='$newEmail',motPasse ='$newMotDePasse' where idUtilisateur ='$idUtilisateur'");
-                     header("location:profil.php?id=$idUtilisateur");
+        $sqlEdit = $conn->prepare("update utilisateur set nom = :newNom, prenom = :newPrenom ,motPasse =:newMotDePasse where idUtilisateur = :idUtilisateur");
+        $sqlEdit->bindParam(':newNom', $newNom);
+        $sqlEdit->bindParam(':newPrenom', $newPrenom);
+        $sqlEdit->bindParam(':newMotDePasse', $newMotDePasse);
+        $sqlEdit->bindParam(':idUtilisateur' , $idUtilisateur);
+        $sqlEdit->execute();
+
+                     header("location:profil.php");
 
         
     }
      
 }
 if(isset($_POST['annuler'])){
-            header("location:profil.php?id=$idUtilisateur");
+            header("location:profil.php");
 
 }
 ?>
@@ -71,27 +79,27 @@ include('include/header.php')
         <h2>Paramètres</h2>
 
       <div class="mb-3">
-    <label for="" class="form-label">Nom</label>
+    <label for="" class="form-label">Nom :</label>
     <input type="text" class="form-control" id="" name="nom" value="<?php echo $utilisateur['nom'] ?>">
-    <div  class="form-text erreurs"><?php echo $errors['nom']; ?></div>
+    <div  class="form-text erreurs" style="color: red;"><?php echo $errors['nom']; ?></div>
   </div>
 
    <div class="mb-3">
-    <label for="" class="form-label">Prenom</label>
+    <label for="" class="form-label">Prenom :</label>
     <input type="text" class="form-control" id="" name="prenom" value="<?php echo $utilisateur['prenom'] ?>">
-    <div  class="form-text erreurs"><?php echo $errors['prenom']; ?></div>
+    <div  class="form-text erreurs" style="color: red;"><?php echo $errors['prenom']; ?></div>
   </div>
-         
   <div class="mb-3">
-    <label for="" class="">Email</label>
-    <input type="email" class="form-control" id="" name="email" value="<?php echo $utilisateur['email'] ?>">
-    <div  class="form-text erreurs"> <?php echo $errors['email']; ?></div>
+    <label for="" class="form-label">Ancien mot de passe :</label>
+    <input type="password" class="form-control" id="" name="oldMotDePasse">
+    <div  class="form-text erreurs" style="color: red;"> <?php echo $errors['oldMotDePasse']; ?></div>
+
   </div>
 
   <div class="mb-3">
-    <label for="" class="form-label">Mot de passe</label>
-    <input type="password" class="form-control" id="" name="motDePasse">
-    <div  class="form-text erreurs"> <?php echo $errors['motDePasse']; ?></div>
+    <label for="" class="form-label">Nouveau mot de passe :</label>
+    <input type="password" class="form-control" id="" name="newMotDePasse">
+    <div  class="form-text erreurs" style="color: red;"> <?php echo $errors['newMotDePasse']; ?></div>
 
   </div>
 

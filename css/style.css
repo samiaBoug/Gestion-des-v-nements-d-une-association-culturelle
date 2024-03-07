@@ -1,21 +1,75 @@
-.container{
+/* header */
+*{
+  font-family: 'Popping';
+  
+}
+section, header , footer{
+    min-width: 320px;
+    
+}
+.header{
+    background-color: #cfa9d8;
    
-    background-color: rgb(255, 255, 255);
 }
-.carte{
+a.navbar-brand{
+    
+    margin: 0 1rem;
+    font-weight: bolder;
+    font-size: 5vw;
+    background-image: url(../img/backgrounTitle.jpg);
+    background-size: cover;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color:transparent;
+}
+.nav-link , .connexion{
+    position: relative;
+    left: 90%;
+}
+.connexion{
+ margin-bottom: 25px;
+}
+/* index.php */
+.formFiltre{
+    margin-right: 6 ;
+    padding-left: 5rem;
+}
+
+/* facture */
+.card-facture{
+    
+    width: 60%;
+    margin: 2% 20%;
+
+}
+.card-facture * {
+    margin: 10px 20px;
+}
+.header-facture{
     display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
+    justify-content: space-between;
+    margin-bottom: 20px ;
 }
-.card{
-    margin: 10px auto;
+/* billets */
+/* .card-billet{
+ display: block;
+} */
+.place-salle{
+    display: flex;
+    justify-content: space-evenly;
 }
-.container {
+/* page details */
+#countdown{
     display: flex;
 }
-#verticNav{
-    width: 160px;
-}
-.erreurs{
-    color: brown;
+#days , #hours, #mins , #s {
+    border: solid;
+    border-radius: 50px;
+    border-width: 2px;
+    width: 90px;
+    height: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
 }

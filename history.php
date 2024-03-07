@@ -5,16 +5,26 @@ if(!isset($_SESSION)){
   session_start();
 }
 $idUtilisateur = $_SESSION['idUtilisateur'];
+$sqlUtilisateur = $conn->prepare("select * from utilisateur where idUtilisateur= :idUtilisateur");
+$sqlUtilisateur->bindParam(':idUtilisateur', $idUtilisateur);
+$sqlUtilisateur->execute();
+$utilisateur = $sqlUtilisateur->fetch(PDO::FETCH_ASSOC);
+$nom = $utilisateur['nom'];
+$prenom = $utilisateur['prenom'];
 
-$sqlFacturesUtilisateur = $conn->query("select * from utilisateur inner join facture on utilisateur.idUtilisateur=facture.idUtilisateur where utilisateur.idUtilisateur='$idUtilisateur' ");
+$sqlFacturesUtilisateur = $conn->prepare("select * from utilisateur inner join facture on utilisateur.idUtilisateur=facture.idUtilisateur where utilisateur.idUtilisateur=:idUtilisateur ");
+$sqlFacturesUtilisateur->bindParam(':idUtilisateur', $idUtilisateur);
+$sqlFacturesUtilisateur->execute();
 $facturesUtilisateur = $sqlFacturesUtilisateur->fetchAll(PDO::FETCH_ASSOC);
+
+
 
 ?>
 
 <section>
-   <h2>Bonjour <?php echo $facturesUtilisateur[0]['nom'] ." ".$facturesUtilisateur[0]['prenom'] ?> !</h2>
+   <h2>Bonjour <?php echo $nom ." ".$prenom?> !</h2>
    <h3> Vos Achats : </h3>
-    <h4>historiques des factures : </h4>
+
    <table class="table">
       <tr>
          <th>Id facture</th>
@@ -22,6 +32,7 @@ $facturesUtilisateur = $sqlFacturesUtilisateur->fetchAll(PDO::FETCH_ASSOC);
          <th>titre d'evenement</th>
          <th>nombre de billets</th>
          <th>montant totale</th> 
+         <th>Voir Facture</th>
       </tr>
       <?php 
       foreach($facturesUtilisateur as $facture){
@@ -51,11 +62,16 @@ $facturesUtilisateur = $sqlFacturesUtilisateur->fetchAll(PDO::FETCH_ASSOC);
       echo '<td>'.$event['titre'].'</td>';
       echo '<td>'.$nbreBillets['count(codeBillet)'].'</td>';
       echo '<td>'.$totale.'</td>';
+      echo '<td><a href="facture.php?id='.$idFacture.'">Voir plus</a></td>';
       echo '</tr>';
+         
       }
+
       ?>
    </table>
-   <h4>historiques de billets :</h4>
+   <a href=""></a>
+ 
+
 </section>
 <?php
 include('include/footer.php')
