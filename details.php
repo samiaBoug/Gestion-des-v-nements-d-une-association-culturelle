@@ -15,7 +15,6 @@
         $errors = [
             'connexion'=> "",
             'nbreBillets'=>""
-
         ];
         // verifier si l'utilisateur est connecté :
         if(isset($_SESSION['idUtilisateur'])){
@@ -32,6 +31,7 @@
           $sqlNumBilletAchete->execute();
           $nombreBilletAchete = $sqlNumBilletAchete->fetch(PDO::FETCH_ASSOC);
           $nbreBilletSelectionner = $_POST['nmbreBilletNormal'] + $_POST['nmbreBilletReduit'];
+          
           // nombre billet selectnionner >0
           if($nbreBilletSelectionner<1){
         $errors['nbreBillets'] = "Veuillez selectionner des billets";
